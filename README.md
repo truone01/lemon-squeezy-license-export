@@ -34,7 +34,25 @@ Prefer not to run a script? The same export runs in the browser at <https://lice
 - [ ] Ship an app update that points license checks at the new server, **with a grace period**, so a network error never locks out a paying user.
 - [ ] Keep the update window in mind: versions that still call Lemon Squeezy stop validating on March 31, 2027.
 
-## 3. Options
+## 3. A license check that survives a move (and outages)
+
+[`examples/license-client.mjs`](examples/license-client.mjs) is a small, dependency-free client for Node 18+ / Electron that talks to the Lemon Squeezy License API with:
+
+- **a configurable base URL**, so moving license checks later means changing one setting, not your logic;
+- **an offline grace period** (default 14 days), so a timeout or a 5xx never locks out someone who validated recently;
+- **a product check** (`meta.product_id`), so a key from another product in your store is rejected;
+- the `instance_id` stored at activation, which validate/deactivate need and which any replacement server must import.
+
+```js
+import { LicenseClient } from './examples/license-client.mjs';
+const lc = new LicenseClient({ storePath: 'license.json', expectedProductId: 12345 });
+await lc.activate(key, os.hostname());      // once
+const { valid, offline } = await lc.check(); // each start
+```
+
+Ship this pattern in your next release, even before you decide where licenses go. Every copy that updates now is one fewer copy hard-coded to Lemon Squeezy.
+
+## 4. Options
 
 | Option | Keeps existing keys | Keeps activations (no re-activate) | App code change | Payments |
 |---|---|---|---|---|
