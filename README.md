@@ -50,6 +50,15 @@ await lc.activate(key, os.hostname());      // once
 const { valid, offline } = await lc.check(); // each start
 ```
 
+**Python** (desktop apps, CLIs, PyInstaller builds; standard library only): [`examples/license_client.py`](examples/license_client.py) has the same behaviour.
+
+```python
+from license_client import LicenseClient
+lc = LicenseClient("license.json", expected_product_id=12345)
+lc.activate(key, socket.gethostname())  # once
+result = lc.check()                     # each start: {"valid": ..., "offline": ...}
+```
+
 Ship this pattern in your next release, even before you decide where licenses go. Every copy that updates now is one fewer copy hard-coded to Lemon Squeezy.
 
 ## 4. Options
