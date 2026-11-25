@@ -4,8 +4,6 @@ Lemon Squeezy is winding down. It stops processing payments on **March 31, 2027*
 
 If your desktop app, plugin, CLI or extension calls Lemon Squeezy's License API (`/v1/licenses/activate`, `/validate`, `/deactivate`), those calls stop working when Lemon Squeezy does. Paying customers get locked out, or your app fails open. Every copy you've shipped needs to point somewhere else **before** that date, and users update slowly, so the change has to ship months early.
 
-Step-by-step guides (License API replacement, Stripe key issuance, WordPress plugin updates): **https://truone01.github.io/lemon-squeezy-license-export/**
-
 This repo has two things:
 
 1. **`ls-license-export.mjs`**: a dependency-free script that exports every license key *and every device activation* to one CSV. Run it first, whatever you decide next.
@@ -69,10 +67,9 @@ Ship this pattern in your next release, even before you decide where licenses go
 |---|---|---|---|---|
 | Stripe Managed Payments alone | No license keys at all | No | n/a | Stripe |
 | [Dodo Payments](https://docs.dodopayments.com/features/license-keys) migration CLI | Yes (imports LS keys) | Not stated by Dodo; check | Move to Dodo's license API | Must move to Dodo |
-| [Polar](https://polar.sh) | Has license keys; check whether it imports yours | Check | Move to Polar's API | Must move to Polar |
+| [Polar](https://polar.sh) merchant migration | Yes (imports LS keys) | Yes, same activation ids ([polar#17233](https://github.com/polarsource/polar/pull/17233), merged 2026-11-25) | Move to Polar's API | Must move to Polar |
 | [Keygen](https://keygen.sh), [Keylight](https://keylight.dev), [LicenseSeat](https://licenseseat.com), [LicenseLatte](https://licenselatte.com) | Usually via import | Varies | Adopt their SDK/API | Any |
-| Self-host | Yes, from the CSV | Yes, from the CSV | Your own endpoints | Any |
-| [LicenseHandoff](https://licensehandoff.2-29-18-178.sslip.io/?ref=github) (**waitlist, not available yet**) | Yes | Yes (imports instances) | Change the base URL only (same requests and response shapes as LS) | Any, incl. Stripe Managed Payments |
+| Self-host: [Keypost](https://github.com/GanymedeNil/Keypost) (MIT, LS-API-compatible, on Stripe) or your own | Yes | Yes (Keypost imports via the LS API; own code from the CSV) | Base URL only with Keypost; your own endpoints otherwise | Stripe (Keypost) / any |
 
 Check each vendor's current docs; this table reflects what they published as of November 2026.
 
@@ -85,6 +82,6 @@ Check each vendor's current docs; this table reflects what they published as of 
 
 ## About
 
-Maintained by [LicenseHandoff](https://licensehandoff.2-29-18-178.sslip.io/?ref=github). Not affiliated with Lemon Squeezy or Stripe. Corrections welcome via issues.
+The planned LicenseHandoff hosted service is closed (2026-11-25); this free script stays available. Not affiliated with Lemon Squeezy or Stripe. Corrections welcome via issues.
 
 Script licence: MIT (see `LICENSE`).
