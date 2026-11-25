@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><link rel="canonical" href="https://truone01.github.io/lemon-squeezy-license-export/">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lemon Squeezy license keys: export tool and migration guides</title>
+<meta name="description" content="Free MIT tool to export Lemon Squeezy license keys and activations to CSV before the March 31, 2027 shutdown, plus guides for moving License API calls, Stripe checkout key issuance and WordPress plugin updates.">
+<style>
+/* ---------- Design tokens ---------- */
+:root{
+  --bg:#f7f8fa; --surface:#ffffff; --surface-2:#f1f3f6; --fg:#14171c; --fg-2:#454b55; --muted:#6b7280;
+  --line:#e3e6eb; --line-strong:#cfd4dc;
+  --accent:#3b5bdb; --accent-hover:#3249b8; --accent-ink:#ffffff; --accent-soft:#edf1ff;
+  --ok:#1f7a3a; --ok-soft:#e8f5ec; --warn:#a15c00; --warn-soft:#fff4e0; --bad:#b42318; --bad-soft:#fdecea;
+  --focus:#3b5bdb;
+  --r-sm:8px; --r:12px; --r-lg:16px;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:72px;
+  --shadow:0 1px 2px rgba(16,24,40,.04),0 1px 3px rgba(16,24,40,.06);
+  --font:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f1115; --surface:#171a21; --surface-2:#1e222b; --fg:#e8eaee; --fg-2:#c3c8d1; --muted:#9aa1ad;
+  --line:#2a2f3a; --line-strong:#3a404d;
+  --accent:#7c93ff; --accent-hover:#9aacff; --accent-ink:#0f1115; --accent-soft:#1d2440;
+  --ok:#5cc27a; --ok-soft:#14261b; --warn:#f0a83a; --warn-soft:#2b210f; --bad:#f2786d; --bad-soft:#2d1614;
+  --focus:#9aacff; --shadow:none;
+}}
+/* ---------- Base ---------- */
+*{box-sizing:border-box} html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 var(--font);-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-underline-offset:2px} a:hover{color:var(--accent-hover)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:4px}
+.wrap{max-width:880px;margin:0 auto;padding:0 var(--s5)}
+.skip{position:absolute;left:-9999px}.skip:focus{left:var(--s4);top:var(--s4);background:var(--surface);padding:var(--s2) var(--s3);z-index:10}
+/* ---------- Type scale ---------- */
+h1{font-size:clamp(30px,5.2vw,46px);line-height:1.12;letter-spacing:-.025em;margin:var(--s5) 0 var(--s4);font-weight:750}
+h2{font-size:24px;line-height:1.25;letter-spacing:-.015em;margin:var(--s8) 0 var(--s4);font-weight:700}
+h3{font-size:17px;line-height:1.35;margin:0 0 var(--s2);font-weight:650}
+p{margin:0 0 var(--s4)} .lede{font-size:19px;color:var(--fg-2);max-width:680px}
+.small{font-size:14px;color:var(--muted)} .meta{font-size:13px;color:var(--muted)}
+code{font-family:var(--mono);font-size:.9em;background:var(--surface-2);padding:1px 6px;border-radius:6px}
+/* ---------- Header / footer ---------- */
+header.site{display:flex;justify-content:space-between;align-items:center;min-height:64px;border-bottom:1px solid var(--line)}
+.logo{display:inline-flex;gap:var(--s2);align-items:center;font-weight:750;color:var(--fg);text-decoration:none;letter-spacing:-.01em}
+.logo svg{width:24px;height:24px}
+header nav a{color:var(--fg-2);text-decoration:none;margin-left:var(--s4);font-size:15px;padding:var(--s2) 0;white-space:nowrap}
+header nav a:hover{color:var(--fg)}
+@media (max-width:400px){header nav a{margin-left:var(--s3);font-size:14px}.logo{font-size:15px}}
+@media (max-width:359px){.nav-how{display:none}}
+footer{margin:var(--s8) 0 var(--s6);padding-top:var(--s5);border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+footer nav{display:flex;flex-wrap:wrap;gap:var(--s2) var(--s4)}
+footer nav a{color:var(--fg-2)}
+p code,li code{overflow-wrap:anywhere}
+table.cmp{border-collapse:collapse;font-size:14px;min-width:560px}table.cmp th,table.cmp td{border:1px solid var(--line);padding:var(--s2);text-align:left;vertical-align:top}
+/* ---------- Components ---------- */
+pre{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:var(--s4);overflow-x:auto;font-size:13px;line-height:1.5;max-width:100%}
+pre code{background:none;padding:0}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;border-radius:99px;padding:4px 12px;border:1px solid var(--line);background:var(--surface);color:var(--fg-2)}
+.badge .dot{width:8px;height:8px;border-radius:50%;background:var(--warn)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:var(--s5);box-shadow:var(--shadow)}
+.grid{display:grid;gap:var(--s4);grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:720px){.grid,.grid-3{grid-template-columns:1fr}}
+.grid .card p{margin:0;color:var(--fg-2);font-size:15px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--s2);min-height:48px;padding:0 var(--s5);border-radius:var(--r-sm);border:1px solid transparent;
+  background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:650;cursor:pointer;text-decoration:none;transition:background .15s,transform .05s}
+.btn:hover{background:var(--accent-hover);color:var(--accent-ink)} .btn:active{transform:translateY(1px)}
+.btn[disabled],.btn[aria-disabled=true]{opacity:.55;cursor:not-allowed}
+.btn-secondary{background:var(--surface);color:var(--fg);border-color:var(--line-strong)} .btn-secondary:hover{background:var(--surface-2);color:var(--fg)}
+.btn-block{width:100%}
+label{display:block;font-weight:600;font-size:15px;margin:0 0 var(--s2)}
+input[type=email],input[type=text]{width:100%;min-height:48px;padding:0 var(--s4);border:1px solid var(--line-strong);border-radius:var(--r-sm);font:inherit;background:var(--surface);color:var(--fg)}
+input[type=email]:hover,input[type=text]:hover{border-color:var(--muted)}
+input[aria-invalid=true]{border-color:var(--bad)}
+.field{margin-bottom:var(--s4)}
+.hint{font-size:14px;color:var(--muted);margin-top:var(--s2)}
+.alert{display:flex;gap:var(--s3);align-items:flex-start;border-radius:var(--r-sm);padding:var(--s3) var(--s4);font-size:15px;margin:var(--s3) 0}
+.alert-error{background:var(--bad-soft);color:var(--bad);border:1px solid color-mix(in srgb,var(--bad) 30%,transparent)}
+.alert-ok{background:var(--ok-soft);color:var(--ok)}
+.hp{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
+/* Steps list */
+.steps{counter-reset:s;list-style:none;padding:0;margin:0;display:grid;gap:var(--s3)}
+.steps li{counter-increment:s;display:flex;gap:var(--s3);align-items:flex-start;color:var(--fg-2)}
+.steps li::before{content:counter(s);flex:none;width:28px;height:28px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center}
+/* Pricing */
+.price{font-size:32px;font-weight:750;letter-spacing:-.02em;color:var(--fg);margin:var(--s1) 0 var(--s2)}
+.price small{font-size:15px;font-weight:500;color:var(--muted)}
+.card.featured{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head><body><main id="main" class="wrap">
+<h1>Lemon Squeezy license keys: export tool and migration guides</h1>
+<p>Lemon Squeezy stops processing payments on March 31, 2027, and Stripe Managed Payments does not deliver license keys. If your app calls the Lemon Squeezy License API, these pages help you keep paying customers unlocked.</p>
+<h2>Free tool</h2>
+<ul><li><a href="https://github.com/truone01/lemon-squeezy-license-export">lemon-squeezy-license-export</a> (MIT, no dependencies): export every license key and device activation to one CSV with your own API key. Also usable <a href="https://licensehandoff.2-29-18-178.sslip.io/export-lemon-squeezy-license-keys?ref=ghpages">in the browser</a>.</li></ul>
+<h2>Guides</h2>
+<ul>
+<li><a href="guides/lemon-squeezy-shutdown-license-keys/">Lemon Squeezy is shutting down: how to keep your license keys working</a></li>
+<li><a href="guides/lemon-squeezy-license-api/">The Lemon Squeezy License API, and how to move off it</a></li>
+<li><a href="guides/lemon-squeezy-to-stripe-license-keys/">Moving from Lemon Squeezy to Stripe? Your license keys don't come with you</a></li>
+<li><a href="guides/lemon-squeezy-wordpress-plugin-license-updates/">Selling a WordPress plugin or theme through Lemon Squeezy? Plan the license and update move now</a></li>
+</ul>
+<h2>Hosted option</h2>
+<p>LicenseHandoff is a planned hosted, Lemon Squeezy-compatible license API (/tmp/claude-1001/-home-builder-venture/b07247a9-3adf-4434-87c5-2167d704886e/scratchpad/repo2/mo). It is not available yet; <a href="https://licensehandoff.2-29-18-178.sslip.io?ref=ghpages#waitlist">join the waitlist</a> to be contacted when it is. Other options are compared in the guides.</p>
+<p><small>Not affiliated with Lemon Squeezy or Stripe. Written with AI assistance.</small></p>
+</main></body></html>

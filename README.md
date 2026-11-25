@@ -4,6 +4,8 @@ Lemon Squeezy is winding down. It stops processing payments on **March 31, 2027*
 
 If your desktop app, plugin, CLI or extension calls Lemon Squeezy's License API (`/v1/licenses/activate`, `/validate`, `/deactivate`), those calls stop working when Lemon Squeezy does. Paying customers get locked out, or your app fails open. Every copy you've shipped needs to point somewhere else **before** that date, and users update slowly, so the change has to ship months early.
 
+Step-by-step guides (License API replacement, Stripe key issuance, WordPress plugin updates): **https://truone01.github.io/lemon-squeezy-license-export/**
+
 This repo has two things:
 
 1. **`ls-license-export.mjs`**: a dependency-free script that exports every license key *and every device activation* to one CSV. Run it first, whatever you decide next.
